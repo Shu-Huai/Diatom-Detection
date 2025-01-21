@@ -1,0 +1,4 @@
+backend/venv
+frontend/vue-admin/node_modules
+backend/media
+backend/**/__pycache__
