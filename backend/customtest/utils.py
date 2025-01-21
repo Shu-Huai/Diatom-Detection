@@ -50,17 +50,25 @@ def systematic_testing(model, test_data, test_labels, device):  # k, x,
     print("test_data shape (numpy):", test_data.shape)
     print("test_labels shape (numpy):", test_labels.shape)
     # 转为 Torch Tensor 并移动到 device
-    test_data_tensor = torch.from_numpy(test_data).to(device).float()
-    print("test_data_tensor shape (tensor):", test_data_tensor.shape)
-    print("test_data_tensor after conversion:", test_data_tensor.dtype)
-    model.eval()
-    with torch.no_grad():
-        outputs = model(test_data_tensor)  # shape: (N, 2) 如果是 CrossEntropy
-        print("outputs shape:", outputs.shape)
-        predicted = outputs.argmax(dim=1).cpu().numpy()  # shape=(N,)
-        # predicted = (outputs > 0.5).long().cpu().numpy().flatten()
-        print("predicted shape:", predicted.shape)
-
+    batch_size = 32
+    num_batches = (test_data.shape[0] + batch_size - 1) // batch_size
+    correct_predictions = 0
+    predicted = np.array([])
+    for i in range(num_batches):
+        start_idx = i * batch_size
+        end_idx = min((i + 1) * batch_size, test_data.shape[0])
+        batch_data = test_data[start_idx:end_idx]
+        batch_labels = test_labels[start_idx:end_idx]
+        batch_test_data_tensor = torch.from_numpy(batch_data).to(device).float()
+        print("batch_test_data_tensor shape (tensor):", batch_test_data_tensor.shape)
+        print("batch_test_data_tensor after conversion:", batch_test_data_tensor.dtype)
+        model.eval()
+        with torch.no_grad():
+            outputs = model(batch_test_data_tensor)  # shape: (N, 2) 如果是 CrossEntropy
+            print("outputs shape:", outputs.shape)
+            predicted = np.concatenate((predicted, outputs.argmax(dim=1).cpu().numpy()))  # shape=(N,)
+            # predicted = (outputs > 0.5).long().cpu().numpy().flatten()
+            print("predicted shape:", predicted.shape)
     try:
         correct_predictions = np.sum(predicted == test_labels)
         accuracy = accuracy_score(test_labels, predicted) * 100
