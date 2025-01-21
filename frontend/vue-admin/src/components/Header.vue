@@ -44,7 +44,7 @@ export default {
     },
     back(comm){
       if(comm=='loginOut'){
-        this.$confirm("是否确定退出登陆?", "提示", {
+        this.$confirm("是否确定退出登录?", "提示", {
             confirmButtonText: "确定",
             cancelButtonText: "取消",
             type: "warning",

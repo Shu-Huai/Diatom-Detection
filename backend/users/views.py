@@ -81,7 +81,7 @@ def update_user_view(request, user_id):
             return JsonResponse({"code": 1, "msg": "用户不存在"}, status=404)
 
         data = json.loads(request.body)
-        user.username = data.get('username', user.username)
+        user.name = data.get('name', user.name)
         user.email = data.get('email', user.email)
         user.phone = data.get('phone', user.phone)
         # 如果有修改管理员权限
@@ -105,6 +105,7 @@ def create_user_view(request):
             is_admin = data.get("is_admin", False)
 
             if User.objects.filter(username=username).exists():
+                print("dddddddd")
                 return JsonResponse({"code": 1, "msg": "用户名已存在"}, status=400)
 
             user = User.objects.create_user(

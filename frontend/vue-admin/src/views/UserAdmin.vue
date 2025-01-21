@@ -157,7 +157,10 @@ export default {
         ],
         phone: [
           { required: true, message: "电话不能为空", trigger: "blur" },
-          { pattern: /^[0-9]+$/, message: "电话格式不正确", trigger: "blur" },
+          {
+            pattern: /^((13[0-9])|(14[0|5|6|7|9])|(15[0|1|2|3|5|6|7|8|9])|(16[2|5|6|7])|(17[0|1|2|3|5|6|7|8])|(18[0-9])|(19[0|1|2|3|5|6|7|8|9]))\d{8}$/,
+            message: "电话格式不正确", trigger: "blur"
+          },
         ],
         password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
         old_password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
@@ -295,6 +298,8 @@ export default {
         }
         try {
           const res = await addUser(this.newUser);
+          console.log("dddddddddddddddddddddddddd")
+          console.log(res)
           if (res.code === 0) {
             this.$message.success("用户创建成功！");
             this.addUserDialogVisible = false;
@@ -304,13 +309,23 @@ export default {
           }
         } catch (error) {
           console.error("创建用户失败:", error);
-          this.$message.error("服务器错误，请稍后重试！");
+          if (error.response) {
+            // 如果后端返回了错误信息，显示错误信息
+            this.$message.error(error.response.data.msg || "服务器错误，请稍后重试！");
+          } else {
+            // 否则，显示通用的错误信息
+            this.$message.error("服务器错误，请稍后重试！");
+          }
         }
       });
     },
     async deleteSelectedUsers() {
       if (this.selectedUsers.length === 0) {
         this.$message.warning('请选择要删除的用户！');
+        return;
+      }
+      if (this.selectedUsers.some(user => user.username === localStorage.getItem('username'))) {
+        this.$message.warning('不能删除当前登录用户！');
         return;
       }
       try {
