@@ -129,9 +129,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # 使用mysql驱动
         'NAME': 'diatom_db',  # 你创建的数据库名称
-        'USER': 'sjy_diatom_db',  # 数据库用户名
-        'PASSWORD': 'admin',  # 数据库密码
-        'HOST': 'mysql.lvshuhuai.cn',  # MySQL 地址
+        'USER': 'ShuHuai',  # 数据库用户名
+        'PASSWORD': 'prwq0421',  # 数据库密码
+        'HOST': 'localhost',  # MySQL 地址
         'PORT': '3306',  # MySQL 端口
         # 'OPTIONS': {
         #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -144,7 +144,7 @@ DATABASES = {
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://redis.lvshuhuai.cn:6379/5',  # Redis 地址和数据库编号
+        'LOCATION': 'redis://localhost:6379/5',  # Redis 地址和数据库编号
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
